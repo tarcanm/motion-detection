@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "sensitivity": 5,
+  "min_interval_sec": 10,
+  "resolution_width": 640,
+  "resolution_height": 480,
+  "alert_cooldown_sec": 15
+}
