@@ -208,18 +208,6 @@ def detect_motion():
     log(f"   Sensitivity: {sensitivity}/10 ({threshold}px)")
     log(f"   Cooldown: {cooldown}s | Video: {VIDEO_DURATION}s")
 
-    # Disable auto-exposure — single most impactful fix for false positives
-    try:
-        subprocess.run(
-            ["v4l2-ctl", "--set-ctrl", "auto_exposure=1",
-             "--set-ctrl", "gain=128",
-             "--set-ctrl", "exposure_time_absolute=250"],
-            capture_output=True, timeout=5
-        )
-        log("   Camera: manual exposure (gain=128, exposure=250)")
-    except Exception as e:
-        log(f"   Camera: auto-exposure config skipped ({e})")
-
     try:
         import cv2
     except ImportError:
@@ -317,11 +305,7 @@ def detect_motion():
 
                 continue
 
-        # Update reference every 30 frames (~2s) — NOT every frame.
-        # Frame-to-frame at 15fps produces <300px diff for a walking person,
-        # but 2 seconds apart gives a clear signal above the 3000px threshold.
-        if frame_count % 30 == 0:
-            prev_gray = gray
+        prev_gray = gray
 
         if frame_count % 500 == 0:
             log(f"❤ Frames:{frame_count} Detections:{detection_count}")
